@@ -1,0 +1,78 @@
+version: "3.1"
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    container_name: elastic
+    volumes:
+    - es:/usr/share/elasticsearch/data
+    ports:
+    - "9200:9200"
+    - "9300:9300"
+    environment:
+      node.name: 'demo_node'
+      cluster.name: 'demo_cluster'
+      ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+      xpack.security.enabled: 'false'
+      cluster.routing.allocation.disk.threshold_enabled: 'true'
+      cluster.routing.allocation.disk.watermark.low: '93%'
+      cluster.routing.allocation.disk.watermark.high: '95%'
+    networks:
+    - elk
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.3.2
+    container_name: kibana
+    ports:
+    - "5601:5601"
+    depends_on:
+    - elasticsearch
+    networks:
+    - elk
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.3.2
+    container_name: logstash
+    ports:
+    - "5044:5044"
+    - "9600:9600"
+    volumes:
+    - es:/usr/logstash
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+    - elasticsearch
+    networks:
+    - elk
+
+  elasticsearch_test:
+      image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+      container_name: elastic_test
+      volumes:
+      - es_test:/usr/share/elasticsearch/data
+      ports:
+      - "9202:9200"
+      - "9302:9300"
+      environment:
+        node.name: 'demo_node'
+        cluster.name: 'demo_cluster'
+        ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+        xpack.security.enabled: 'false'
+        cluster.routing.allocation.disk.threshold_enabled: 'true'
+        cluster.routing.allocation.disk.watermark.low: '93%'
+        cluster.routing.allocation.disk.watermark.high: '95%'
+
+
+
+networks:
+  elk:
+    driver: bridge
+
+volumes:
+  es:
+    external: true
+  es_test:
+    external: true
+
+
+
