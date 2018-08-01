@@ -12,15 +12,15 @@ Creating volumes:
 docker volume create --name=es
 docker volume create --name=es_test
 
-Creating repository in AWS:
+AWS-CLI commands:
 aws ecr create-repository --repository-name damian-repository/elastic (e.g)
 
-Moving one image from another repository to another:  
+Moving one image from repository to another repository:  
 docker tag sourceRepository:tag targetRepository:tag  
 docker push targetRepository:tag
 
 Important:
-= Spock tests will pass only if your elastir_search Docker images is up
+- Spock tests will pass only if your elastir_search Docker images is up
 
 TODO:
 - More domains
