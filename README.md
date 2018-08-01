@@ -20,7 +20,7 @@ docker tag sourceRepository:tag targetRepository:tag
 docker push targetRepository:tag
 
 Important:
-- Spock tests will pass only if your elastir_search Docker images is up
+- Spock tests will pass only if your elastir_search Docker image is up
 
 TODO:
 - More domains
